@@ -1,0 +1,80 @@
+/* Container-ul principal al navbar-ului */
+.main-navbar {
+    display: flex;
+    justify-content: space-between; /* Împarte grupul stânga de cel dreapta */
+    align-items: center;
+    background-color: #2c3e50;
+    color: white;
+    width: 100%;
+
+    /* PADDING-UL CERUT (1rem sus/jos, 2rem stânga/dreapta) */
+    padding: 1rem 2rem;
+
+    box-sizing: border-box; /* Important pentru ca padding-ul să nu strice lățimea */
+}
+
+/* --- GRUPUL DIN STÂNGA (Logo + Link-uri) --- */
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex; /* Asigură alinierea corectă a imaginii */
+    align-items: center;
+    margin-right: 2rem; /* Spațiu între logo și link-uri */
+}
+
+/* Lista de link-uri (Users, Devices) */
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    margin-right: 1.5rem;
+}
+
+/* Stilul pentru TOATE link-urile (inclusiv Login) */
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #3498db;
+}
+
+/* --- GRUPUL DIN DREAPTA (Auth) --- */
+.nav-auth {
+    display: flex;
+    align-items: center;
+}
+
+/* Stilul pentru "marius.miru" */
+.nav-username {
+    color: white; /* CULOAREA ALBĂ CERUTĂ */
+    margin-right: 1rem; /* Spațiu între nume și butonul de logout */
+    font-weight: 500;
+}
+
+/* Stilul pentru butonul de Logout */
+.nav-logout-button {
+    background-color: #f44336; /* Roșu */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px; /* Îl facem "pastilă" */
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.nav-logout-button:hover {
+    background-color: #d32f2f; /* Un roșu mai închis la hover */
+}

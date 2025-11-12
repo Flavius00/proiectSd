@@ -1,0 +1,135 @@
+version: '3'
+
+services:
+  db-users:
+    image: postgres
+    container_name: db-users
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: user-service
+    ports:
+      - "5433:5432"
+    volumes:
+      - my-db-users:/var/lib/postgresql/data
+    networks:
+      my_net:
+
+  db-auth:
+    image: postgres
+    container_name: db-auth
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: auth-service
+    ports:
+      - "5435:5432"
+    volumes:
+      - my-db-auth:/var/lib/postgresql/data
+    networks:
+      my_net:
+
+  db-device:
+    image: postgres
+    container_name: db-device
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: device-service
+    ports:
+      - "5434:5432"
+    volumes:
+      - my-db-device:/var/lib/postgresql/data
+    networks:
+      my_net:
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx-frontend
+    restart: unless-stopped
+    networks:
+      - my_net
+
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80" # The HTTP port
+      # - "443:443" # The HTTPS port
+      - "8080:8080" # Dashboard port
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro" # Traefik can listen to the Docker events
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro" # Static configuration file
+      - "./dynamic:/etc/traefik/dynamic:ro" # Dynamic configuration files
+      - "./logs:/var/log/traefik" # Log files
+    develop: # Enable live reload of dynamic configuration files on Windows, if using Unix based system needs to be commented out
+      watch:
+        - path: ./dynamic                   # watch the whole folder
+          action: restart
+    networks:
+      - my_net
+
+
+  spring-demo:
+    build:
+      context: ./userService
+      dockerfile: ./Dockerfile
+    container_name: spring-demo
+    ports:
+      - "8081:8080"
+    environment:
+      - DB_IP=db-users
+      - DB_PORT=5432
+      - DB_DBNAME=user-service
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+    networks:
+      my_net:
+
+  device-service:
+    build:
+      context: ./deviceService
+      dockerfile: ./Dockerfile
+    container_name: device-service
+    ports:
+      - "8082:8080"
+    environment:
+      - DB_IP=db-device
+      - DB_PORT=5432
+      - DB_DBNAME=device-service
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+    networks:
+      my_net:
+
+  auth-service:
+    build:
+      context: ./authService
+      dockerfile: ./Dockerfile
+    container_name: auth-service
+    ports:
+      - "8083:8080"
+    environment:
+      - DB_IP=db-auth
+      - DB_PORT=5432
+      - DB_DBNAME=auth-service
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+    networks:
+      my_net:
+
+
+volumes:
+  my-db-users:
+  my-db-device:
+  my-db-auth:
+
+networks:
+  my_net:
+    external: true

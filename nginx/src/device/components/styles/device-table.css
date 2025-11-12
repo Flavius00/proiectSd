@@ -1,0 +1,13 @@
+/* Suprascriem text-align și adăugăm vertical-align */
+.device-table th,
+.device-table td {
+  text-align: center;
+  vertical-align: middle; /* Aliniază conținutul pe verticală (bun pt butoane) */
+}
+
+/* Container pentru butoanele de acțiuni */
+.actions-cell {
+  display: flex;
+  gap: 8px; /* Spațiu între butoanele Edit și Delete */
+  justify-content: center; /* Centrează butoanele în celulă */
+}

@@ -1,0 +1,70 @@
+.user-form {
+  padding: 2rem;
+
+}
+
+.user-form h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* === REVENIRE LA STILUL INIȚIAL === */
+.form-group {
+  margin-bottom: 1rem;
+  /* Am scos 'display: grid' și tot ce ținea de el */
+}
+
+/* === REVENIRE LA STILUL INIȚIAL === */
+.form-group label {
+  display: block; /* Pune eticheta pe un rând separat, deasupra */
+  margin-bottom: 0.5rem; /* Spațiu între etichetă și input */
+  font-weight: bold;
+  color: #555;
+  text-align: left; /* Aliniere la stânga (default) */
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* === REVENIRE LA STILUL INIȚIAL === */
+.error-message {
+  color: #D32F2F;
+  font-size: 0.875rem;
+  margin-top: 0.25rem; /* Adaugă spațiu deasupra mesajului de eroare */
+  display: block; /* Se asigură că e pe rândul lui */
+  /* Am scos 'grid-area: error' */
+}
+
+.invalid-input {
+  border-color: #D32F2F;
+  background-color: #FFEBEE;
+}
+
+.invalid-input:focus {
+  border-color: #D32F2F;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+  outline: none;
+}
