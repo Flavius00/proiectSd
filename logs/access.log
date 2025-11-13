@@ -3190,3 +3190,7 @@
 172.19.0.1 - - [12/Nov/2025:17:00:56 +0000] "GET /api/devices HTTP/1.1" 200 285 "-" "-" 18 "device-api@file" "http://device-service:8080" 87ms
 172.19.0.1 - - [12/Nov/2025:17:01:01 +0000] "GET /logo.png HTTP/1.1" 304 0 "-" "-" 20 "nginx-frontend@file" "http://nginx:80" 7ms
 172.19.0.1 - - [12/Nov/2025:17:01:01 +0000] "GET /api/users HTTP/1.1" 200 167 "-" "-" 19 "user-api@file" "http://spring-demo:8080" 63ms
+172.19.0.1 - - [12/Nov/2025:21:42:12 +0000] "GET / HTTP/1.1" 200 655 "-" "-" 1 "nginx-frontend@file" "http://nginx:80" 38ms
+172.19.0.1 - - [12/Nov/2025:21:42:12 +0000] "GET /static/js/main.9db69dad.js HTTP/1.1" 304 0 "-" "-" 2 "nginx-frontend@file" "http://nginx:80" 2ms
+172.19.0.1 - - [12/Nov/2025:21:42:12 +0000] "GET /static/css/main.67147b2e.css HTTP/1.1" 304 0 "-" "-" 3 "nginx-frontend@file" "http://nginx:80" 1ms
+172.19.0.1 - - [12/Nov/2025:21:42:13 +0000] "GET /static/media/icon.e6fde268bf12107135fb.png HTTP/1.1" 304 0 "-" "-" 4 "nginx-frontend@file" "http://nginx:80" 2ms
