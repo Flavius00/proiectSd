@@ -46,6 +46,21 @@ services:
     networks:
       my_net:
 
+  db-monitoring:
+    image: postgres
+    container_name: db-monitoring
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: monitoring-service
+    ports:
+      - "5436:5432"
+    volumes:
+      - my-db-monitoring:/var/lib/postgresql/data
+    networks:
+      my_net:
+
   nginx:
     build:
       context: ./nginx
@@ -53,7 +68,21 @@ services:
     container_name: nginx-frontend
     restart: unless-stopped
     networks:
-      - my_net
+      my_net:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      my_net:
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   traefik:
     image: traefik:v3.0
@@ -73,7 +102,7 @@ services:
         - path: ./dynamic                   # watch the whole folder
           action: restart
     networks:
-      - my_net
+      my_net:
 
 
   spring-demo:
@@ -124,11 +153,37 @@ services:
     networks:
       my_net:
 
+  monitoring-service:
+    build:
+      context: ./monitoringService
+      dockerfile: ./Dockerfile
+    container_name: monitoring-service
+    ports:
+      - "8084:8080"
+    environment:
+      - DB_IP=db-monitoring
+      - DB_PORT=5432
+      - DB_DBNAME=monitoring-service
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    networks:
+      my_net:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db-monitoring:
+        condition: service_started
+
 
 volumes:
   my-db-users:
   my-db-device:
   my-db-auth:
+  my-db-monitoring:
 
 networks:
   my_net:

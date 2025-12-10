@@ -33,6 +33,15 @@ http:
         - strip-api-prefix # Remove /api prefix before forwarding
       service: auth-service # Forward to the auth-service
 
+    monitoring-api:
+      rule: "Host(`localhost`) && PathPrefix(`/api/monitoring`)" # Match requests to localhost with /api prefix
+      entryPoints:
+        - web # Listen on the web (HTTP) entry point
+      middlewares:
+        - jwt-authenticator
+        - strip-api-prefix # Remove /api prefix before forwarding
+      service: monitoring-service # Forward to the monitoring-service
+
   middlewares:
     strip-api-prefix: # Middleware to remove /api prefix
       stripPrefix:
@@ -68,3 +77,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://auth-service:8080" # Container name solved by Docker DNS
+
+    monitoring-service:
+      loadBalancer:
+        servers:
+          - url: "http://monitoring-service:8080" # Container name solved by Docker DNS

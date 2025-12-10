@@ -24,6 +24,9 @@ public class ReadingDTO {
     public UUID getDeviceId() { return deviceId; }
     public void setDeviceId(UUID deviceId) { this.deviceId = deviceId; }
 
+    public Long getTimeStamp() { return timeStamp; }
+    public void setTimeStamp(Long timeStamp) { this.timeStamp = timeStamp; }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
