@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 # --- CONFIGURATION ---
 RABBITMQ_HOST = 'localhost'
 QUEUE_NAME = 'energy-queue'
-DEVICE_ID = ""  # <--- PASTE A VALID UUID FROM YOUR DB HERE
+DEVICE_ID = "0000000000000-0000-0000-0001"  # <--- PASTE A VALID UUID FROM YOUR DB HERE
 
 def simulate_device():
     try:
@@ -32,9 +32,9 @@ def simulate_device():
 
             # Create the JSON payload (matching your Java DTO)
             payload = {
-                "timestamp": int(simulated_time.timestamp() * 1000), # Epoch in milliseconds
+                "timeStamp": int(simulated_time.timestamp() * 1000), # Epoch in milliseconds
                 "deviceId": DEVICE_ID,
-                "measurementValue": energy_value
+                "reading": energy_value
             }
 
             # Convert to JSON string
