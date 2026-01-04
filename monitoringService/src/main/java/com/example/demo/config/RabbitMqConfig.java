@@ -22,6 +22,11 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public Queue deviceDeleteQueue() {
+        return new Queue("device-delete-queue", true); // true = durable
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new JacksonJsonMessageConverter();
     }

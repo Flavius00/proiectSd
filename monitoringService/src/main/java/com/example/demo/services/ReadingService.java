@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +60,22 @@ public class ReadingService {
                 .stream()
                 .map(ReadingBuilder::toReadingDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Map<UUID, List<ReadingDTO>> getReadingsForUserChart(UUID userId, long start, long end) {
+        List<MonitoredDevice> devices = deviceRepository.findByUserId(userId);
+        Map<UUID, List<ReadingDTO>> result = new HashMap<>();
+
+        for (MonitoredDevice device : devices) {
+            List<ReadingDTO> readings = readingRepository.findByDeviceIdAndDate(device.getId(), start, end)
+                    .stream()
+                    .map(ReadingBuilder::toReadingDTO)
+                    .collect(Collectors.toList());
+
+            // Adăugăm în mapă doar dacă există citiri (opțional)
+            result.put(device.getId(), readings);
+        }
+        return result;
     }
 
     @Transactional

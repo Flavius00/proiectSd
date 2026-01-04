@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -45,16 +46,15 @@ public class ReadingController {
         return ResponseEntity.ok(readingService.findReadingById(id));
     }
 
-    @GetMapping("/chart/{deviceId}")
-    public ResponseEntity<List<ReadingDTO>> getChartData(
-            @PathVariable UUID deviceId,
-            @RequestParam("date") String dateStr) { // Format asteptat: YYYY-MM-DD
+    @GetMapping("/chart/user/{userId}")
+    public ResponseEntity<Map<UUID, List<ReadingDTO>>> getUserChartData(
+            @PathVariable UUID userId,
+            @RequestParam("date") String dateStr) { // Format: YYYY-MM-DD
 
-        // Conversie data in timestamp start/end
         java.time.LocalDate date = java.time.LocalDate.parse(dateStr);
         long start = date.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
         long end = date.plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        return ResponseEntity.ok(readingService.getReadingsForChart(deviceId, start, end));
+        return ResponseEntity.ok(readingService.getReadingsForUserChart(userId, start, end));
     }
 }

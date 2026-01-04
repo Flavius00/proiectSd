@@ -18,8 +18,8 @@ public class MonitoredDevice implements Serializable {
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @Column(name = "device_name", nullable = false)
-    private String deviceName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "maximum_consumption", nullable = false)
     private Double maximumConsumption;
@@ -34,9 +34,9 @@ public class MonitoredDevice implements Serializable {
         this.maximumConsumption = maximumConsumption;
     }
 
-    public MonitoredDevice(UUID monitoredDeviceId, String deviceName, Double maximumConsumption, UUID userId) {
+    public MonitoredDevice(UUID monitoredDeviceId, String name, Double maximumConsumption, UUID userId) {
         this.id = monitoredDeviceId;
-        this.deviceName = deviceName;
+        this.name = name;
         this.maximumConsumption = maximumConsumption;
         this.userId = userId;
     }
@@ -65,10 +65,10 @@ public class MonitoredDevice implements Serializable {
         return id;
     }
 
-    public String getDeviceName() {
-        return deviceName;
+    public String getName() {
+        return name;
     }
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
+    public void setName(String deviceName) {
+        this.name = deviceName;
     }
 }

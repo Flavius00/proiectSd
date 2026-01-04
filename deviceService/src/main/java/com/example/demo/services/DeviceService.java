@@ -74,6 +74,10 @@ public class DeviceService {
 
     public void delete(UUID id) {
         deviceRepository.deleteById(id);
+
+        rabbitTemplate.convertAndSend("device-delete-queue", id);
+
+        LOGGER.debug("Device with id {} was deleted and sync message sent.", id);
     }
 
 }
