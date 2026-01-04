@@ -10,14 +10,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
-    @Bean
-    public Queue userToDeviceQueue() {
-        return new Queue("user-device-queue", true);
-    }
 
     @Bean
-    public Queue deviceSyncQueue() {
-        return new Queue("device-sync-queue", true);
+    public Queue userSyncQueue() {
+        return new Queue("auth-user-queue", true);
     }
 
     @Bean
@@ -27,8 +23,8 @@ public class RabbitMqConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(jsonMessageConverter());
-        return template;
+        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        return rabbitTemplate;
     }
 }

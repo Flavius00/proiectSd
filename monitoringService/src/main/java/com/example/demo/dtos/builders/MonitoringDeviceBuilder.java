@@ -9,13 +9,14 @@ public class MonitoringDeviceBuilder {
     }
 
     public static MonitoringDeviceDTO toMonitoringDeviceDto(MonitoredDevice device){
-        return new MonitoringDeviceDTO(device.getId(), device.getMaximumHourlyConsumption(), device.getUserId());
+        return new MonitoringDeviceDTO(device.getId(), device.getDeviceName(),device.getMaximumConsumption(), device.getUserId());
     }
 
     public static MonitoredDevice toEntity(MonitoringDeviceDTO monitoringDeviceDTO){
         return new MonitoredDevice(
                 monitoringDeviceDTO.getId(),
-                monitoringDeviceDTO.getMaximumHourlyConsumption(),
+                monitoringDeviceDTO.getName(),
+                monitoringDeviceDTO.getMaximumConsumption(),
                 monitoringDeviceDTO.getUserId()
         );
     }

@@ -13,7 +13,7 @@ public class UserDetailsDTO {
     @NotBlank(message = "name is required")
     private String username;
 
-    @NotBlank(message = "address is required")
+    @NotBlank(message = "email is required")
     private String email;
 
     @NotBlank(message = "password is required")

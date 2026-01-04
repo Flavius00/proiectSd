@@ -31,16 +31,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findUsers());
     }
 
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody UserDetailsDTO user) {
-        UUID id = userService.insert(user);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-        return ResponseEntity.created(location).build(); // 201 + Location header
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsDTO> getPerson(@PathVariable UUID id) {
@@ -57,8 +47,4 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<UUID> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.delete(id));
-    }
 }

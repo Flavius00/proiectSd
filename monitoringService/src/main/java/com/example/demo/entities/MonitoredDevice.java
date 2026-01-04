@@ -18,31 +18,35 @@ public class MonitoredDevice implements Serializable {
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @Column(name = "maximum_hourly_consumption", nullable = false)
-    private Double maximumHourlyConsumption;
+    @Column(name = "device_name", nullable = false)
+    private String deviceName;
+
+    @Column(name = "maximum_consumption", nullable = false)
+    private Double maximumConsumption;
 
     @Column(name = "user_id",  nullable = false)
     private UUID userId;
 
     public MonitoredDevice() {}
 
-    public MonitoredDevice(UUID userId, Double maximumHourlyConsumption) {
+    public MonitoredDevice(UUID userId, Double maximumConsumption) {
         this.userId = userId;
-        this.maximumHourlyConsumption = maximumHourlyConsumption;
+        this.maximumConsumption = maximumConsumption;
     }
 
-    public MonitoredDevice(UUID monitoredDeviceId, Double maximumHourlyConsumption, UUID userId) {
+    public MonitoredDevice(UUID monitoredDeviceId, String deviceName, Double maximumConsumption, UUID userId) {
         this.id = monitoredDeviceId;
-        this.maximumHourlyConsumption = maximumHourlyConsumption;
+        this.deviceName = deviceName;
+        this.maximumConsumption = maximumConsumption;
         this.userId = userId;
     }
 
-    public Double getMaximumHourlyConsumption() {
-        return maximumHourlyConsumption;
+    public Double getMaximumConsumption() {
+        return maximumConsumption;
     }
 
-    public void setMaximumHourlyConsumption(Double maximumHourlyConsumption) {
-        this.maximumHourlyConsumption = maximumHourlyConsumption;
+    public void setMaximumConsumption(Double maximumHourlyConsumption) {
+        this.maximumConsumption = maximumHourlyConsumption;
     }
 
     public UUID getUserId() {
@@ -59,5 +63,12 @@ public class MonitoredDevice implements Serializable {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 }

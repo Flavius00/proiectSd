@@ -1,8 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.JwtResponse;
+import com.example.demo.dtos.RegisterRequest;
 import com.example.demo.dtos.UserDTO;
 import com.example.demo.dtos.UserDetailsDTO;
+import com.example.demo.services.AuthService;
 import com.example.demo.services.JwtService;
 import com.example.demo.services.UserService;
 import jakarta.validation.Valid;
@@ -11,9 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -24,22 +25,20 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService, AuthService authService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UUID> create(@Valid @RequestBody UserDetailsDTO user) {
-        UUID id = userService.insert(user);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-        return ResponseEntity.created(location).body(id); // 201 + Location header
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody RegisterRequest registerRequest) {
+        authService.register(registerRequest);
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "User registered and sync started!"));
     }
 
     @PostMapping("/login")
@@ -54,8 +53,6 @@ public class UserController {
 
     @GetMapping("/validate")
     public ResponseEntity<String> validateToken() {
-        // Dacă cererea ajunge aici, înseamnă că JwtAuthFilter a rulat
-        // și a validat token-ul cu succes (altfel ar fi dat 401).
         return ResponseEntity.ok("Token is valid");
     }
 
@@ -71,8 +68,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UUID> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.deleteUser(id));
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
+        authService.deleteUser(id);
+
+        return ResponseEntity.ok("User deleted successfully!");
     }
 
     @GetMapping("/{id}")

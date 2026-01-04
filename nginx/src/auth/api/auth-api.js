@@ -5,7 +5,10 @@ const endpoint = {
     auth: '/api/auth'
 };
 
-const AUTH_TOKEN = "Bearer " + localStorage.getItem("token");
+// Functie helper pentru a lua token-ul mereu proaspat
+function getAuthHeader() {
+    return "Bearer " + localStorage.getItem("token");
+}
 
 function login(credentials, callback) {
     let request = new Request(HOST.backend_api + endpoint.auth + "/login", {
@@ -17,23 +20,23 @@ function login(credentials, callback) {
         body: JSON.stringify(credentials)
     });
 
-    RestApiClient.performRequest(request, callback);
-
     console.log("URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
 }
 
-function register(credentials, callback) {
+function register(userFullDetails, callback) {
+    // Aici userFullDetails contine acum si datele de profil (age, address etc)
+    // Auth Service le va prelua si le va trimite prin RabbitMQ
     let request = new Request(HOST.backend_api + endpoint.auth + "/register", {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials)
+        body: JSON.stringify(userFullDetails)
     });
 
     console.log("URL: " + request.url);
-
     RestApiClient.performRequest(request, callback);
 }
 
@@ -41,13 +44,13 @@ function deleteUser(id, callback) {
     let request = new Request(HOST.backend_api + endpoint.auth + "/" + id, {
         method: 'DELETE',
         headers: {
-            "Authorization": AUTH_TOKEN,
+            'Accept': 'application/json',
+            "Authorization": getAuthHeader(), 
         }
     });
 
-    RestApiClient.performRequest(request, callback);
-
     console.log("URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
 }
 
 function updateUser(id, user, callback) {
@@ -56,27 +59,26 @@ function updateUser(id, user, callback) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            "Authorization": AUTH_TOKEN,
+            "Authorization": getAuthHeader(),
         },
         body: JSON.stringify(user)
     });
 
-    RestApiClient.performRequest(request, callback);
-
     console.log("URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
 }
 
 function getAuthById(id, callback) {
     let request = new Request(HOST.backend_api + endpoint.auth + "/" + id, {
         method: 'GET',
         headers: {
-            "Authorization": AUTH_TOKEN,
+            'Accept': 'application/json',
+            "Authorization": getAuthHeader(),
         }
     });
 
-    RestApiClient.performRequest(request, callback);
-
     console.log("URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
 }
 
 export {

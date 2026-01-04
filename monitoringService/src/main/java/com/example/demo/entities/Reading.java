@@ -24,9 +24,6 @@ public class Reading implements Serializable{
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @Column(name = "device_name", nullable = false)
-    private String deviceName;
-
     @Column(name = "device_id", nullable = false)
     private UUID deviceId;
 
@@ -40,8 +37,7 @@ public class Reading implements Serializable{
     public Reading() {
     }
 
-    public Reading(String deviceName, Double reading, UUID deviceId, Long timeStamp) {
-        this.deviceName = deviceName;
+    public Reading(Double reading, UUID deviceId, Long timeStamp) {
         this.reading = reading;
         this.deviceId = deviceId;
         this.timeStamp = timeStamp;
@@ -53,14 +49,6 @@ public class Reading implements Serializable{
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String name) {
-        this.deviceName = name;
     }
 
     public Double getReading() {

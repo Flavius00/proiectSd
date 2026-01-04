@@ -11,8 +11,6 @@ public class ReadingDetailsDTO {
 
     private UUID id;
 
-    @NotBlank(message = "device name is required")
-    private String deviceName;
     @NotNull(message = "reading is required")
     private Double reading;
     @NotBlank(message = "age is required")
@@ -23,15 +21,13 @@ public class ReadingDetailsDTO {
     public ReadingDetailsDTO() {
     }
 
-    public ReadingDetailsDTO(String deviceName, Double reading, UUID deviceId) {
-        this.deviceName = deviceName;
+    public ReadingDetailsDTO(Double reading, UUID deviceId) {
         this.reading = reading;
         this.deviceId = deviceId;
     }
 
-    public ReadingDetailsDTO(UUID id, String deviceName, Double reading, UUID deviceId, Long timeStamp) {
+    public ReadingDetailsDTO(UUID id, Double reading, UUID deviceId, Long timeStamp) {
         this.id = id;
-        this.deviceName = deviceName;
         this.reading = reading;
         this.deviceId = deviceId;
         this.timeStamp = timeStamp;
@@ -43,14 +39,6 @@ public class ReadingDetailsDTO {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
     }
 
     public Double getReading() {
@@ -83,12 +71,11 @@ public class ReadingDetailsDTO {
         if (o == null || getClass() != o.getClass()) return false;
         ReadingDetailsDTO that = (ReadingDetailsDTO) o;
         return deviceId == that.deviceId &&
-                Objects.equals(deviceName, that.deviceName) &&
                 Objects.equals(reading, that.reading);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceName, reading, deviceId);
+        return Objects.hash(reading, deviceId);
     }
 }

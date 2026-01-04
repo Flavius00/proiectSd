@@ -52,6 +52,11 @@ function Navbar() {
                                 Devices
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link to="/chart" className="nav-link">
+                                Monitoring
+                            </Link>
+                        </li>
                     </ul>
                 )}
             </div>

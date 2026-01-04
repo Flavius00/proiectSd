@@ -84,24 +84,14 @@ function UserContainer(props) {
         });
     }
 
-    function handleDelete(user) {
-        if (window.confirm(`Ești sigur că vrei să ștergi ${user.id}?`)) {
-            API_USERS.deleteUser({ id: user.id }, (result, status, err) => {
-                if (status === 200) {
-                    alert(`Utilizatorul ${user.lastName} a fost șters cu succes.`);
-                    fetchUsers();
-                } else {
-                    alert(`Eroare la ștergerea utilizatorului ${user.lastName}.`);
-                }
-            });
-            API_AUTH.deleteAuth(user.id, (result, status, err) => {
-                if (status === 200) {
-                    console.log(`Datele de autentificare pentru utilizatorul ${user.id} au fost șterse cu succes.`);
-                } else {
-                    console.log(`Eroare la ștergerea datelor de autentificare pentru utilizatorul ${user.id}.`);
-                }
-            });
-        }
+    const handleDelete = (user) => {
+        API_AUTH.deleteAuth(user.id, (result, status, err) => {
+            if (result !== null && status === 200) {
+                fetchUsers();
+            } else {
+                setError((err && err.message) || "Eroare la ștergere");
+            }
+        });
     }
 
     const token = localStorage.getItem('token');

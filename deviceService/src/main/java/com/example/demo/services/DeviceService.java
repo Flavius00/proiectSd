@@ -51,12 +51,6 @@ public class DeviceService {
         Device device = DeviceBuilder.toEntity(deviceDto);
         device = deviceRepository.save(device);
 
-        // --- COD NOU SINCRONIZARE ---
-        // Construim mesajul pentru Monitoring (trebuie sa aiba campurile: id, maximumHourlyConsumption, userId)
-        // Poti folosi un Map sau un DTO dedicat. Aici folosim un DTO simplu 'on the fly' sau DeviceDetailsDto daca se potriveste.
-        // Pentru siguranta, MonitoringService asteapta MonitoringDeviceDTO.
-        // Asigura-te ca trimiti JSON. Spring face asta automat daca trimiti un obiect.
-
         DeviceDetailsDto syncData = new DeviceDetailsDto(
                 device.getId(),
                 device.getName(),

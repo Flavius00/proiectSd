@@ -102,10 +102,10 @@ public class ReadingService {
         System.out.println("Reading salvat/actualizat pentru ora " + Instant.ofEpochMilli(hourlyTimestamp));
 
         // 4. Verificare limită consum (opțional, pentru viitor)
-        if (reading.getReading() > device.getMaximumHourlyConsumption()) {
+        if (reading.getReading() > device.getMaximumConsumption()) {
             System.err.println("ALERTĂ: Depășire consum pentru device " + device.getId() +
                     " (Actual: " + reading.getReading() +
-                    ", Maxim: " + device.getMaximumHourlyConsumption() + ")");
+                    ", Maxim: " + device.getMaximumConsumption() + ")");
         }
     }
 

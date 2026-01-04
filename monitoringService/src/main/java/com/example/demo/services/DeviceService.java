@@ -25,12 +25,12 @@ public class DeviceService {
         MonitoredDevice device;
         if (existingDeviceOpt.isPresent()) {
             device = existingDeviceOpt.get();
-            device.setMaximumHourlyConsumption(deviceDTO.getMaximumHourlyConsumption());
+            device.setMaximumConsumption(deviceDTO.getMaximumConsumption());
             device.setUserId(deviceDTO.getUserId());
         } else {
             device = new MonitoredDevice();
             device.setId(deviceDTO.getId());
-            device.setMaximumHourlyConsumption(deviceDTO.getMaximumHourlyConsumption());
+            device.setMaximumConsumption(deviceDTO.getMaximumConsumption());
             device.setUserId(deviceDTO.getUserId());
         }
 

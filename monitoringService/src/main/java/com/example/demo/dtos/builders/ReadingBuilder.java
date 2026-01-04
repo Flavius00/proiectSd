@@ -14,12 +14,11 @@ public class ReadingBuilder {
     }
 
     public static ReadingDetailsDTO toReadingDetailsDTO(Reading reading) {
-        return new ReadingDetailsDTO(reading.getId(), reading.getDeviceName(), reading.getReading(), reading.getDeviceId(), reading.getTimeStamp());
+        return new ReadingDetailsDTO(reading.getId(), reading.getReading(), reading.getDeviceId(), reading.getTimeStamp());
     }
 
     public static Reading toEntity(ReadingDetailsDTO readingDetailsDTO) {
         return new Reading(
-                readingDetailsDTO.getDeviceName(),
                 readingDetailsDTO.getReading(),
                 readingDetailsDTO.getDeviceId(),
                 readingDetailsDTO.getTimeStamp()

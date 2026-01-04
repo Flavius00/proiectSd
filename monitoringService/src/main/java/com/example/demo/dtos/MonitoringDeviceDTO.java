@@ -5,12 +5,14 @@ import java.util.UUID;
 public class MonitoringDeviceDTO {
 
     private UUID id;
-    private Double maximumHourlyConsumption;
+    private String name;
+    private Double maximumConsumption;
     private UUID userId;
 
-    public MonitoringDeviceDTO(UUID id, Double maximumHourlyConsumption, UUID userId) {
+    public MonitoringDeviceDTO(UUID id, String name, Double maximumConsumption, UUID userId) {
         this.id = id;
-        this.maximumHourlyConsumption = maximumHourlyConsumption;
+        this.name = name;
+        this.maximumConsumption = maximumConsumption;
         this.userId = userId;
     }
 
@@ -22,12 +24,12 @@ public class MonitoringDeviceDTO {
         this.id = id;
     }
 
-    public Double getMaximumHourlyConsumption() {
-        return maximumHourlyConsumption;
+    public Double getMaximumConsumption() {
+        return maximumConsumption;
     }
 
-    public void setMaximumHourlyConsumption(Double maximumHourlyConsumption) {
-        this.maximumHourlyConsumption = maximumHourlyConsumption;
+    public void setMaximumConsumption(Double maximumConsumption) {
+        this.maximumConsumption = maximumConsumption;
     }
 
     public UUID getUserId() {
@@ -36,5 +38,13 @@ public class MonitoringDeviceDTO {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
