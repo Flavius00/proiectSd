@@ -66,9 +66,24 @@ public class DeviceService {
     }
 
     public UUID update(DeviceDetailsDto deviceDto) {
-        Device device = DeviceBuilder.toEntity(deviceDto);
-        device = deviceRepository.save(device);
-        LOGGER.debug("Device with id {} was updated in db", device.getId());
+        // 1. Găsim dispozitivul
+        Device device = deviceRepository.findById(deviceDto.getId()).orElseThrow(() ->
+                new ResourceNotFoundException(Device.class.getSimpleName() + " with id: " + deviceDto.getId()));
+
+        // 2. Actualizăm câmpurile locale
+        device.setName(deviceDto.getName());
+        device.setMaximumConsumption(deviceDto.getMaximumConsumption());
+        device.setUserId(deviceDto.getUserId());
+
+        Device updatedDevice = deviceRepository.save(device);
+
+        DeviceDetailsDto syncDto = DeviceBuilder.toDeviceDetailsDTO(updatedDevice);
+
+
+        rabbitTemplate.convertAndSend("device-sync-queue", syncDto);
+
+        LOGGER.debug("Device updated and sync message sent for id: {}", device.getId());
+
         return device.getId();
     }
 

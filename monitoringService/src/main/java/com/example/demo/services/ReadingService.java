@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 
+import com.example.demo.dtos.DeviceChartDataDTO;
 import com.example.demo.dtos.ReadingDTO;
 import com.example.demo.dtos.ReadingDetailsDTO;
 import com.example.demo.dtos.builders.ReadingBuilder;
@@ -62,18 +63,25 @@ public class ReadingService {
                 .collect(Collectors.toList());
     }
 
-    public Map<UUID, List<ReadingDTO>> getReadingsForUserChart(UUID userId, long start, long end) {
+    public List<DeviceChartDataDTO> getReadingsForUserChart(UUID userId, long start, long end) {
+        // 1. Găsim dispozitivele din baza de date locală a Monitoring Service
         List<MonitoredDevice> devices = deviceRepository.findByUserId(userId);
-        Map<UUID, List<ReadingDTO>> result = new HashMap<>();
+        List<DeviceChartDataDTO> result = new ArrayList<>();
 
         for (MonitoredDevice device : devices) {
+            // 2. Pentru fiecare dispozitiv, luăm citirile din interval
             List<ReadingDTO> readings = readingRepository.findByDeviceIdAndDate(device.getId(), start, end)
                     .stream()
                     .map(ReadingBuilder::toReadingDTO)
                     .collect(Collectors.toList());
 
-            // Adăugăm în mapă doar dacă există citiri (opțional)
-            result.put(device.getId(), readings);
+            // 3. Construim obiectul complet folosind datele din monitored_device
+            result.add(new DeviceChartDataDTO(
+                    device.getId(),
+                    device.getName(),
+                    device.getMaximumConsumption(),
+                    readings
+            ));
         }
         return result;
     }
