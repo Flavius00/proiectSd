@@ -8,6 +8,7 @@ import com.example.demo.entities.User;
 import com.example.demo.handlers.exceptions.model.ResourceNotFoundException;
 import com.example.demo.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate; // Import nou
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RabbitTemplate rabbitTemplate) {
         this.userRepository = userRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public List<UserDTO> findUsers() {
@@ -53,9 +56,11 @@ public class UserService {
     @Transactional
     public UUID insert(UserDetailsDTO userDTO) {
         User user = UserBuilder.toEntity(userDTO);
-
         entityManager.persist(user);
-        LOGGER.debug("User with id {} was inserted in db", user.getId());
+
+        rabbitTemplate.convertAndSend("user-sync-queue", user.getId());
+        LOGGER.debug("Sent sync message for user id: {}", user.getId());
+
         return user.getId();
     }
 

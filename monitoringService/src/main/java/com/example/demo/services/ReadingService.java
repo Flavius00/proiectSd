@@ -57,6 +57,13 @@ public class ReadingService {
         return reading.getId();
     }
 
+    public List<ReadingDTO> getReadingsForChart(UUID deviceId, long dateStart, long dateEnd) {
+        return readingRepository.findByDeviceIdAndDate(deviceId, dateStart, dateEnd)
+                .stream()
+                .map(ReadingBuilder::toReadingDTO)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void processReading(ReadingDTO readingDTO) {
         // 1. Verificăm dacă dispozitivul există în baza noastră locală

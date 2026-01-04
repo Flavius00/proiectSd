@@ -6,6 +6,7 @@ import DeviceContainer from './device/device-container';
 import LoginPage from './auth/login';
 import RegisterPage from './auth/register';
 import Home from './home/home';
+import EnergyChart from './monitoring/energy-chart';
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
 
         <Route path="/register"
           element={<RegisterPage />} />
+
+        <Route path="/chart"
+         element={<EnergyChart />} />
 
       </Routes>
     </div>

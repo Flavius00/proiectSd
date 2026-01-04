@@ -1,5 +1,7 @@
 package com.example.demo.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -7,7 +9,10 @@ import java.util.UUID;
 public class ReadingDTO {
     private UUID id;
     private Double reading;
+
+    @JsonProperty("deviceId")
     private UUID deviceId;
+
     private Long timeStamp;
 
     public ReadingDTO() {}

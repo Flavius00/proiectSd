@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/reading")
+@RequestMapping("/monitoring")
 @Validated
 public class ReadingController {
 
@@ -43,5 +43,18 @@ public class ReadingController {
     @GetMapping("/{id}")
     public ResponseEntity<ReadingDetailsDTO> getReading(@PathVariable UUID id) {
         return ResponseEntity.ok(readingService.findReadingById(id));
+    }
+
+    @GetMapping("/chart/{deviceId}")
+    public ResponseEntity<List<ReadingDTO>> getChartData(
+            @PathVariable UUID deviceId,
+            @RequestParam("date") String dateStr) { // Format asteptat: YYYY-MM-DD
+
+        // Conversie data in timestamp start/end
+        java.time.LocalDate date = java.time.LocalDate.parse(dateStr);
+        long start = date.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long end = date.plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        return ResponseEntity.ok(readingService.getReadingsForChart(deviceId, start, end));
     }
 }

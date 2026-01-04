@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 
 import com.example.demo.dtos.DeviceDto;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import com.example.demo.dtos.DeviceDetailsDto;
 import com.example.demo.dtos.builders.DeviceBuilder;
 import com.example.demo.entities.Device;
@@ -21,10 +22,13 @@ import java.util.stream.Collectors;
 public class DeviceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceService.class);
     private final DeviceRepository deviceRepository;
+    private final RabbitTemplate rabbitTemplate;
+
 
     @Autowired
-    public DeviceService(DeviceRepository deviceRepository) {
+    public DeviceService(DeviceRepository deviceRepository, RabbitTemplate rabbitTemplate) {
         this.deviceRepository = deviceRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public List<DeviceDetailsDto> findDevices() {
@@ -46,7 +50,24 @@ public class DeviceService {
     public UUID insert(DeviceDetailsDto deviceDto) {
         Device device = DeviceBuilder.toEntity(deviceDto);
         device = deviceRepository.save(device);
-        LOGGER.debug("Device with id {} was inserted in db", device.getId());
+
+        // --- COD NOU SINCRONIZARE ---
+        // Construim mesajul pentru Monitoring (trebuie sa aiba campurile: id, maximumHourlyConsumption, userId)
+        // Poti folosi un Map sau un DTO dedicat. Aici folosim un DTO simplu 'on the fly' sau DeviceDetailsDto daca se potriveste.
+        // Pentru siguranta, MonitoringService asteapta MonitoringDeviceDTO.
+        // Asigura-te ca trimiti JSON. Spring face asta automat daca trimiti un obiect.
+
+        DeviceDetailsDto syncData = new DeviceDetailsDto(
+                device.getId(),
+                device.getName(),
+                device.getMaximumConsumption(),
+                device.getUserId()
+        );
+
+        rabbitTemplate.convertAndSend("device-sync-queue", syncData);
+        LOGGER.debug("Sent sync message for device id: {}", device.getId());
+        // ----------------------------
+
         return device.getId();
     }
 
