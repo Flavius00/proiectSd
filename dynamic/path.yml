@@ -42,6 +42,12 @@ http:
         - strip-api-prefix # Remove /api prefix before forwarding
       service: monitoring-service # Forward to the monitoring-service
 
+    communication-router:
+      rule: "PathPrefix(`/ws`) || PathPrefix(`/topic`) || PathPrefix(`/app`)"
+      service: communication-service
+      middlewares:
+        - cors # Reutilizăm middleware-ul de CORS existent
+
   middlewares:
     strip-api-prefix: # Middleware to remove /api prefix
       stripPrefix:
@@ -56,6 +62,21 @@ http:
       basicAuth:
         users:
           - "user:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/" # password = "test"
+
+    cors:
+      headers:
+        accessControlAllowMethods:
+          - "GET"
+          - "OPTIONS"
+          - "PUT"
+          - "POST"
+          - "DELETE"
+        accessControlAllowHeaders:
+          - "*"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlMaxAge: 100
+        addVaryHeader: true
 
   services:
     nginx:
@@ -82,3 +103,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://monitoring-service:8080" # Container name solved by Docker DNS
+
+    communication-service:
+      loadBalancer:
+        servers:
+          - url: "http://communication-service:8080" # Container name solved by Docker DNS

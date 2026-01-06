@@ -79,7 +79,7 @@ def simulate_all_devices():
             # 2. Itereaza prin FIECARE device si trimite date
             for device_id in valid_device_ids:
                 # Genereaza valoare random
-                energy_value = round(random.uniform(1.0, 20.0), 2)
+                energy_value = round(random.uniform(1.0, 50.0), 2)
 
                 # Payload
                 payload = {

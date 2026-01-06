@@ -205,6 +205,25 @@ services:
       db-monitoring:
         condition: service_started
 
+  communication-service:
+    build:
+      context: ./comunicationService # Asigură-te că numele folderului e corect pe disk
+      dockerfile: Dockerfile
+    container_name: communication-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SERVER_PORT=8080 # Portul intern
+    ports:
+      - "8085:8080" # Expunem direct 8085 (opțional, pentru teste locale fără proxy)
+    networks:
+      - my_net
+
 
 volumes:
   my-db-users:
