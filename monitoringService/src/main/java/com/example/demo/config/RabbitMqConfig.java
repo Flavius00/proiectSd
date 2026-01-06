@@ -27,6 +27,11 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public Queue notificationQueue() {
+        return new Queue("notification-queue", true);
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new JacksonJsonMessageConverter();
     }

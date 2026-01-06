@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 
 import com.example.demo.dtos.DeviceChartDataDTO;
+import com.example.demo.dtos.NotificationDTO;
 import com.example.demo.dtos.ReadingDTO;
 import com.example.demo.dtos.ReadingDetailsDTO;
 import com.example.demo.dtos.builders.ReadingBuilder;
@@ -13,6 +14,7 @@ import com.example.demo.repositories.ReadingRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +28,13 @@ public class ReadingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadingService.class);
     private final ReadingRepository readingRepository;
     private final MonitoredDeviceReository deviceRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public ReadingService(ReadingRepository readingRepository, MonitoredDeviceReository deviceReository) {
+    public ReadingService(ReadingRepository readingRepository, MonitoredDeviceReository deviceReository, RabbitTemplate rabbitTemplate) {
         this.readingRepository = readingRepository;
         this.deviceRepository = deviceReository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public List<ReadingDTO> findReading() {
@@ -125,9 +129,16 @@ public class ReadingService {
 
         // 4. Verificare limită consum (opțional, pentru viitor)
         if (reading.getReading() > device.getMaximumConsumption()) {
-            System.err.println("ALERTĂ: Depășire consum pentru device " + device.getId() +
-                    " (Actual: " + reading.getReading() +
-                    ", Maxim: " + device.getMaximumConsumption() + ")");
+            System.out.println("ALERT: Overconsumption detected for device " + device.getId());
+
+            NotificationDTO notification = new NotificationDTO(
+                    "High energy consumption detected on device: " + device.getName() +
+                            ". Value: " + reading.getReading() + " exceeds limit: " + device.getMaximumConsumption(),
+                    device.getUserId(),
+                    device.getId()
+            );
+
+            rabbitTemplate.convertAndSend("notification-queue", notification);
         }
     }
 
